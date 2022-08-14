@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600;800&display=swap');
+
+
+/*
+
+CSS RESET
+
+*/
+
+*{
+    padding : 0;
+    margin : 0;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 10px;
+    --font1 : 'Raleway', sans-serif ;
+    --gray : #f2f5f7;
+    --gray1 : #d6dadf;
+    --gray2 :#e6e9eb;
+    --gray_font : #969da7;
+    --dark_blue : #2b323b;
+}
+
+#content{
+    height: 100vh;
+    width: 100vw;
+    padding : 3rem 20rem 3rem 20rem;
+    background-color : var(--gray);
+}
+
+.header{
+    height : 8rem;
+    padding: 2rem;
+    border-bottom: 2px solid var(--gray1);
+}
+
+.title{
+    font-family: var(--font1);
+    font-size : 4rem;
+    font-weight : 800;
+}
+
+.grid-box{
+    padding : 2rem;
+    width :100%;
+    height: 55rem;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+}
+
+/*
+
+SCROLL BAR CUSTOMIZATION
+
+*/
+
+.tasks::-webkit-scrollbar-track,
+.tabs::-webkit-scrollbar-track
+{
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.tasks::-webkit-scrollbar,
+.tabs::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+.tasks::-webkit-scrollbar-thumb,
+.tabs::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: var(--gray1);
+}
+
+/*
+
+TABS STYLE
+
+*/
+
+.tabs{
+    width :100%;
+    height:100%;
+    grid-column: 1 / span 3;
+    display: flex;
+    flex-direction: column;
+    gap : 1rem;
+    border-right: 2px solid var(--gray1);
+    padding : 1rem;
+    overflow: auto;
+}
+.tasks{
+    grid-column: 4 / -1;
+    width :100%;
+    height:100%;
+    overflow : auto;
+}
+
+.tabs h3{
+    font-size : 2.3rem;
+    font-family: var(--font1);
+}
+
+.tab{
+    height : 4.5rem;
+    border-radius: 7px;
+    padding : 1rem;
+    color : var(--gray_font);
+    transition: all 0.3s;
+}
+
+.projects {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.projects-title{
+    height : 4.5rem;
+    border-radius: 7px;
+    padding : 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h3.plus{
+    font-family:sans-serif;
+    font-weight: bolder;
+}
+
+.projects ul{
+    list-style: none;
+    display: flex ;
+    flex-direction: column;
+    gap : 1rem;
+}
+.projects li{
+    font-family: var(--font1);
+    font-size : 2rem;
+    color : var(--gray_font);
+    height : 4rem;
+    padding :1rem;
+    border-radius: 7px;
+    transition: all 0.3s;
+}
+.projects li:hover, .tab:hover{
+    background-color : var(--gray2);
+    cursor: pointer;
+    color : var(--dark_blue);
+}
+
+/*
+
+TASK STYLE
+
+*/
+
+.tasks{
+    padding : 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.tab-title{
+    font-family: var(--font1);
+    font-size : 4rem;
+}
+
+.task{
+    height : 10rem;
+    display: grid;
+    grid-template-columns: repeat(10,1fr);
+    grid-template-rows: repeat(3,1fr);
+    font-family: var(--font1);
+    padding : 1rem;
+    border-radius : 10px;
+    color : var(--gray_font);
+    transition: all 0.3s;
+}
+
+.task:hover{
+    background-color : var(--gray2);
+    cursor: pointer;
+    color : var(--dark_blue);
+}
+
+.check-box{
+    grid-column: 1;
+    grid-row : 1/-1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.check{
+    height : 2.7rem;
+    width :2.7rem;
+    border-radius : 100%;
+    border: 0.4rem solid var(--gray_font);
+    transition: all 0.3s;
+}
+
+.check:hover{
+    border: 0.4rem solid black;
+}
+
+.checked{
+    background-color: var(--gray_font);
+}
+.checked:hover{
+    background-color: black;
+}
+
+
+.task-title{
+    grid-column: 2 / span 7;
+    grid-row: 1 / span 2;
+    font-size : 2.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.done{
+    text-decoration: line-through;
+}
+
+
+.task-info{
+    grid-column: 2 / span 7;
+    grid-row: 3;
+    display: flex;
+    flex-direction: row;
+    gap : 2rem;
+    display: flex;
+    align-items: center;
+}
+
+
+.task-info h6{
+    font-size : 1.5rem;
+}
