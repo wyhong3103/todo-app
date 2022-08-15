@@ -43,7 +43,7 @@ const storage = function(){
         let temp = projects[prev_name];
         projects[project_name] = {
             desc : desc,
-            task : temp[task]
+            task : temp['task']
         };
         delete projects[prev_name];
     }
@@ -56,7 +56,21 @@ const storage = function(){
         return projects_list;
     }
 
-    return {has_projects, createProject, modifyProject, getProjects};
+    function addTask(task){
+        projects[task.project]['task'].push(task);
+    }
+
+    function setCurrentTasks(){
+        //TO all currently
+        current_tasks = [];
+        for (let i in projects){
+            for(let j in projects[i]['task']){
+                current_tasks.push(projects[i]['task'][j]);
+            }
+        }
+    }
+
+    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks};
 }();
 
 
@@ -178,6 +192,7 @@ const displayController = function(){
     function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
         taskClear();
+        storage.setCurrentTasks();
         toDoList.sortTask();
         for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
@@ -279,13 +294,17 @@ const displayController = function(){
         grid_box.appendChild(tasks);
     }
 
-    function defaultTask(){
+    function getDefaultTask(){
         //Default task
+        storage.createProject("Personal", "My personal todo list!");
+        storage.createProject("Project 1", "Hoola! Project 1!");
+        storage.createProject("Project 2", "Hoola! This is project 2!");
         const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "Project 1","Keep working!",0, 0);
+        storage.addTask(default1);
         const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "Project 2","Learn to swim!",0, 1);
+        storage.addTask(default2);
         const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "Personal","Finish the unfinished task.",0, 2);
-        current_tasks = [default1, default2, default3];
-        updateTask();
+        storage.addTask(default3);
     }
 
     function closePopUp(selector){
@@ -492,7 +511,9 @@ const displayController = function(){
         initBasicUI();
         //no tasks found in storage
         if (!storage.has_projects){
-            defaultTask();
+            getDefaultTask();
+            updateTask();
+            updateProjects();
         }
             //set Today
     }
