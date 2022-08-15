@@ -10,6 +10,7 @@ import {
 import Save_svg from './save.svg';
 import Del_svg from './del.svg';
 import Cancel_svg from './cancel.svg';
+import Github_svg from './github.svg';
 
 let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
@@ -136,12 +137,23 @@ const storage = function(){
         return (key in projects);
     }
 
-    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject, getProject, checkKey};
+    return {
+        has_projects, 
+        createProject, 
+        modifyProject, 
+        getProjects, 
+        addTask, 
+        setCurrentTasks, 
+        saveTask, 
+        removeTask, 
+        removeProject, 
+        getProject, 
+        checkKey
+        };
 }();
 
 
 const toDoList = function(){
-    //save to local storage
     function saveTask(index){
         let title = document.querySelector("#task-title-input").value;
         let due_date = document.querySelector("#task-due-date-input").value;
@@ -196,7 +208,13 @@ const toDoList = function(){
         }
     }
 
-    return {saveTask, deleteTask, toggleTask, sortTask, saveProject};
+    return {
+        saveTask,
+        deleteTask, 
+        toggleTask, 
+        sortTask, 
+        saveProject
+    };
 }();
 
 const displayController = function(){
@@ -427,6 +445,25 @@ const displayController = function(){
         
         tasks.appendChild(task_flex_box);
         grid_box.appendChild(tasks);
+
+        //Footer
+        const footer = document.createElement("footer");
+        const p1 = document.createElement("p");
+        p1.textContent = "Made By"
+
+        const hyperlink = document.createElement("a")
+        hyperlink.href = "https://github.com/wyhong3103";
+
+        const github_img = new Image();
+        github_img.src = Github_svg;
+        hyperlink.appendChild(github_img);
+        const p2 = document.createElement("p");
+        p2.textContent = "wyhong3103"
+        hyperlink.appendChild(p2);
+        footer.appendChild(p1);
+        footer.appendChild(hyperlink);
+
+        main_content.appendChild(footer);
     }
 
     function taskInputValidate(){

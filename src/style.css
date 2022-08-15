@@ -416,3 +416,35 @@ input.required{
     cursor: pointer;
     background-color : var(--gray2);
 }
+
+
+/*
+    FOOTER
+*/
+
+footer{
+    width : 100%;
+    font-family: var(--font1);
+    font-weight: 700;
+    font-size : 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap : 1rem;
+}
+
+footer a{
+    display : flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: var(--gray_font);
+    transition :all  0.3s;
+}
+
+footer a:hover{
+    color: black;
+}
