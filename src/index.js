@@ -1,6 +1,7 @@
 import './style.css';
 import {
     format, 
+    parse,
     compareAsc
 } from 'date-fns';
 import Save_svg from './save.svg';
@@ -21,6 +22,35 @@ const task_obj = function(title, due_date, project, desc, checked){
     };
 };
 
+
+const toDoList = function(){
+    //save to local storage
+    function saveTask(index){
+        let title = document.querySelector("#task-title-input").value;
+        let due_date = document.querySelector("#task-due-date-input").value;
+        let desc = document.querySelector("#task-desc-input").value;
+
+        current_tasks[index].title = title;
+        let new_due_date = [];
+        for(let i = 0; i < due_date.length; i++){
+            if (due_date[i] === 'T'){
+                new_due_date.push(" ");
+            }else{
+                new_due_date.push(due_date[i]);
+            }
+        }
+        due_date = new_due_date.join("");
+        current_tasks[index].due_date = parse(due_date, 'yyyy-MM-dd HH:mm', new Date());
+        current_tasks[index].desc = desc;
+    }
+
+    //delete from local storage
+    function deleteTask(index){
+        current_tasks.splice(index, 1);
+    }
+
+    return {saveTask, deleteTask};
+}();
 
 const displayController = function(){
     const _content = document.querySelector("#content");
@@ -74,8 +104,14 @@ const displayController = function(){
         return task_box;
     }
 
+    function taskClear(){
+        const task_flex_box = document.querySelector(".task-flex-box");
+        task_flex_box.innerHTML = "";
+    }
+
     function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
+        taskClear();
         for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
         }
@@ -171,6 +207,11 @@ const displayController = function(){
         updateTask();
     }
 
+    function closePopUp(){
+        const pop_up = document.querySelector(".task-view-box");
+        _content.removeChild(pop_up);
+    }
+
     function taskPopUp(index){
         const task_view_box = document.createElement("div");
         task_view_box.classList.add("task-view-box");
@@ -247,6 +288,10 @@ const displayController = function(){
         img_del.src = Del_svg;
         img_del.alt = "del-svg";
         btn_divs[0].appendChild(img_del);
+        btn_divs[0].addEventListener("click",function(){
+            toDoList.deleteTask(index);
+            updateTask();
+        });
 
         btn_divs[1].classList.add("task-cancel");
         const img_cancel = new Image();
@@ -259,8 +304,13 @@ const displayController = function(){
         img_save.src = Save_svg;
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
+        btn_divs[2].addEventListener("click",function(){
+            toDoList.saveTask(index);
+            updateTask();
+        });
 
         for(const i of btn_divs){
+            i.addEventListener("click", closePopUp);
             task_view_btns.appendChild(i);
         }
         task_view.appendChild(task_view_btns);
@@ -268,6 +318,7 @@ const displayController = function(){
         task_view_box.appendChild(task_view);
         _content.appendChild(task_view_box);
     }
+
 
     function init(){
         initBasicUI();
