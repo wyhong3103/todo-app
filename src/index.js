@@ -24,11 +24,39 @@ const task_obj = function(title, due_date, project, desc, checked, id){
 };
 
 const storage = function(){
-    const projects = JSON.parse(window.localStorage.getItem("projects"));
+    let projects = JSON.parse(window.localStorage.getItem("projects"));
     //{project name : desc,[tasks] }
 
     let has_projects = !(projects === null);
-    return {has_projects};
+    if (!has_projects){
+        projects = {};
+    }
+    
+    function createProject(project_name, desc){
+        projects[project_name] = {
+            desc : desc,
+            task : []
+        }
+    }
+
+    function modifyProject(prev_name, project_name, desc){
+        let temp = projects[prev_name];
+        projects[project_name] = {
+            desc : desc,
+            task : temp[task]
+        };
+        delete projects[prev_name];
+    }
+
+    function getProjects(){
+        let projects_list = [];
+        for (let i in projects){
+            projects_list.push(i);
+        }
+        return projects_list;
+    }
+
+    return {has_projects, createProject, modifyProject, getProjects};
 }();
 
 
@@ -72,23 +100,18 @@ const toDoList = function(){
         });
     }
 
-    /*
-    function sortProject(){
-        projects.sort();
-    }
 
     function saveProject(project_name){
         let title = document.querySelector("#project-title-input").value;
         let desc = document.querySelector("#project-desc-input").value;
         if (project_name === ""){
-            projects.push(title);
-            //save to local storage
+            storage.createProject(title, desc);
         }else{
-
+            storage.modifyProject(project_name,title,desc);
         }
-    }*/
+    }
 
-    return {saveTask, deleteTask, toggleTask, sortTask};
+    return {saveTask, deleteTask, toggleTask, sortTask, saveProject};
 }();
 
 const displayController = function(){
@@ -126,7 +149,7 @@ const displayController = function(){
         due_date.textContent = format(task.due_date, "h:mm a MM/dd/yyyy");
         const task_project = document.createElement("h6");
         task_project.classList.add("task-project");
-        task_project.textContent = task.project;
+        task_project.textContent = `# ${task.project}`;
 
         task_info.append(due_date);
         task_info.append(task_project);
@@ -161,10 +184,16 @@ const displayController = function(){
         }
     }
 
-    /*
     function updateProjects(){
-        //From local storage
-    }*/
+        const project_ul = document.querySelector(".projects ul");
+        project_ul.innerHTML = "";
+        let project_list = storage.getProjects();
+        for (let i = 0; i < project_list.length; i++){
+            const li = document.createElement("li");
+            li.textContent = `# ${project_list[i]}`;
+            project_ul.appendChild(li);
+        }
+    }
 
     function initBasicUI(){
         const main_content = document.createElement("div");
@@ -221,7 +250,9 @@ const displayController = function(){
         project_title_plus.textContent = "+";
         project_title.appendChild(project_title_text);
         project_title.appendChild(project_title_plus);
-        project_title.addEventListener("click", projectPopUp);
+        project_title.addEventListener("click", function(){
+            projectPopUp("");
+        });
         
         const ul = document.createElement("ul");
         
@@ -250,9 +281,9 @@ const displayController = function(){
 
     function defaultTask(){
         //Default task
-        const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "#Project 1","Keep working!",0, 0);
-        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "#Project 2","Learn to swim!",0, 1);
-        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "#Personal","Finish the unfinished task.",0, 2);
+        const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "Project 1","Keep working!",0, 0);
+        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "Project 2","Learn to swim!",0, 1);
+        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "Personal","Finish the unfinished task.",0, 2);
         current_tasks = [default1, default2, default3];
         updateTask();
     }
@@ -371,7 +402,7 @@ const displayController = function(){
         _content.appendChild(task_view_box);
     }
 
-    function projectPopUp(project_name = ""){
+    function projectPopUp(project_name){
         const project_view_box = document.createElement("div");
         project_view_box.classList.add("project-view-box");
 
@@ -439,6 +470,10 @@ const displayController = function(){
         img_save.src = Save_svg;
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
+        btn_divs[2].addEventListener("click",function(){
+            toDoList.saveProject(project_name);
+            updateProjects();
+        });
 
         for(const i of btn_divs){
             i.addEventListener("click", function (){
