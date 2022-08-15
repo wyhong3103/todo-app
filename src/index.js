@@ -3,6 +3,10 @@ import {
     format, 
     compareAsc
 } from 'date-fns';
+import Save_svg from './save.svg';
+import Del_svg from './del.svg';
+import Cancel_svg from './cancel.svg';
+
 
 let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
@@ -20,6 +24,8 @@ const task_obj = function(title, due_date, project, desc, checked){
 
 
 const displayController = function(){
+    const _content = document.querySelector("#content");
+
     function createTask(task){
         const task_box = document.createElement("div");
         task_box.classList.add("task-box");
@@ -69,11 +75,10 @@ const displayController = function(){
     }
 
     function initBasicUI(){
-        const content = document.querySelector("#content");
 
         const main_content = document.createElement("div");
         main_content.classList.add("main-content");
-        content.appendChild(main_content);
+        _content.appendChild(main_content);
 
         const header = document.createElement("div");
         header.classList.add("header");
@@ -155,9 +160,110 @@ const displayController = function(){
         //Default task
         const default1 = task_obj("Work", format(new Date(2022, 7, 15, 20,10), "h:mm a MM/dd/yyyy") , "#Project 1","Keep working!",0);
         const default2 = task_obj("Swim",format(new Date(2022, 9, 15, 10,15), "h:mm a MM/dd/yyyy") , "#Project 2","Learn to swim!",0);
-        const default3 = task_obj("Code",format(new Date(2022, 8, 15, 10,20), "h:mm a MM/dd/yyyy") , "·Today","Finish the unfinished task.",0);
+        const default3 = task_obj("Code",format(new Date(2022, 8, 15, 10,20), "h:mm a MM/dd/yyyy") , "#Personal","Finish the unfinished task.",0);
         current_tasks = [default1, default2, default3];
         updateTask();
+    }
+
+    function hideBg(){
+        const hide_bg = document.createElement("div");
+        hide_bg.classList.add("hide-bg");
+        _content.appendChild(hide_bg);
+    }
+
+    function taskPopUp(){
+        const task_view_box = document.createElement("div");
+        task_view_box.classList.add("task-view-box");
+
+        const task_view = document.createElement("div");
+        task_view.classList.add("task-view");
+
+        let input_divs = [];
+        for(let i = 0; i < 4; i++){
+            const input_div = document.createElement("div");
+            input_div.classList.add("input");
+            input_divs.push(input_div);
+        }
+
+        input_divs[0].classList.add("input-title");
+        const label_title = document.createElement("label");
+        label_title.for = "task-title-input";
+        label_title.textContent = "Title*";
+        const input_title = document.createElement("input");
+        input_title.type = "text";
+        input_title.id = "task-title-input"
+        input_divs[0].appendChild(label_title);
+        input_divs[0].appendChild(input_title);
+        
+
+        input_divs[1].classList.add("input-due-date");
+        const label_due_date = document.createElement("label");
+        label_due_date.for = "task-due-date-input";
+        label_due_date.textContent = "Due Date*";
+        const input_due_date = document.createElement("input");
+        input_due_date.type = "datetime-local";
+        input_due_date.id = "task-due-date-input"
+        input_divs[1].appendChild(label_due_date);
+        input_divs[1].appendChild(input_due_date);
+
+        input_divs[2].classList.add("input-project");
+        const label_project = document.createElement("label");
+        label_project.textContent = "Project";
+        const span_project = document.createElement("span");
+        span_project.textContent = "#Personal";
+        span_project.classList.add("task-project-input");
+        input_divs[2].appendChild(label_project);
+        input_divs[2].appendChild(span_project);
+
+        input_divs[3].classList.add("input-desc");
+        const label_desc = document.createElement("label");
+        label_desc.for = "task-desc-input";
+        label_desc.textContent = "Description";
+        const textarea = document.createElement("textarea");
+        textarea.id = "task-desc-input";
+        textarea.cols = "30";
+        textarea.rows = "10";
+        input_divs[3].appendChild(label_desc);
+        input_divs[3].appendChild(textarea);
+
+        for (const i of input_divs){
+            task_view.appendChild(i);
+        }
+
+        const task_view_btns = document.createElement("div");
+        task_view_btns.classList.add("task-view-btns");
+
+        let btn_divs = [];
+        for(let i = 0; i < 3; i++){
+            const btn_div = document.createElement("div");
+            btn_div.classList.add("task-btn");
+            btn_divs.push(btn_div);
+        }
+        btn_divs[0].classList.add("task-del");
+        const img_del = new Image();
+        img_del.src = Del_svg;
+        img_del.alt = "del-svg";
+        btn_divs[0].appendChild(img_del);
+
+        btn_divs[1].classList.add("task-cancel");
+        const img_cancel = new Image();
+        img_cancel.src = Cancel_svg;
+        img_cancel.alt = "cancel-svg";
+        btn_divs[1].appendChild(img_cancel);
+
+        btn_divs[2].classList.add("task-save");
+        const img_save = new Image();
+        img_save.src = Save_svg;
+        img_save.alt = "save-svg";
+        btn_divs[2].appendChild(img_save);
+
+        for(const i of btn_divs){
+            task_view_btns.appendChild(i);
+        }
+        task_view.appendChild(task_view_btns);
+
+        task_view_box.appendChild(task_view);
+        _content.appendChild(task_view_box);
     }
 
     function init(){
@@ -171,5 +277,8 @@ const displayController = function(){
 
     //return some function that might be needed for external use
     init();
+    hideBg();
+    taskPopUp();
+    return {taskPopUp, hideBg}
 }();
 
