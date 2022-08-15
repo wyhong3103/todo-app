@@ -56,6 +56,7 @@ const storage = function(){
 
     function modifyProject(prev_name, project_name, desc){
         let temp = projects[prev_name];
+        delete projects[prev_name];
         projects[project_name] = {
             desc : desc,
             task : temp['task']
@@ -63,7 +64,6 @@ const storage = function(){
         for(let i in projects[project_name]['task']){
             projects[project_name]['task'][i].project = project_name;
         }
-        delete projects[prev_name];
         saveLocalStorage();
     }
 
@@ -132,7 +132,11 @@ const storage = function(){
         }
     }
 
-    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject, getProject};
+    function checkKey(key){
+        return (key in projects);
+    }
+
+    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject, getProject, checkKey};
 }();
 
 
@@ -432,6 +436,14 @@ const displayController = function(){
         return true;
     }
 
+    function projectInputValidate(project_name){
+        const title = document.querySelector("#project-title-input").value;
+        if (title === '' || (project_name != title && storage.checkKey(title))){
+            return false;
+        }
+        return true;
+    }
+
     function getDefaultTask(){
         //Default task
         storage.createProject("Personal", "My personal todo list!");
@@ -637,6 +649,7 @@ const displayController = function(){
                 cur_tab = "Today";
                 switchTab();
             }
+            closePopUp(".project-view-box")
             updateProjects();
             updateTask();
         });
@@ -646,6 +659,9 @@ const displayController = function(){
         img_cancel.src = Cancel_svg;
         img_cancel.alt = "cancel-svg";
         btn_divs[1].appendChild(img_cancel);
+        btn_divs[1].addEventListener("click", function(){
+            closePopUp(".project-view-box");
+        });
 
         btn_divs[2].classList.add("project-save");
         const img_save = new Image();
@@ -653,18 +669,25 @@ const displayController = function(){
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
         btn_divs[2].addEventListener("click",function(){
+            if (!projectInputValidate(project_name)){
+                const input = document.querySelector("#project-title-input");
+                input.value = "";
+                input.placeholder = "Project name is either used or invalid."
+                input.classList.add("required");
+                return;
+            }
             toDoList.saveProject(project_name);
             if (cur_tab === project_name){
                 cur_tab = document.querySelector("#project-title-input").value;
                 switchTab();
             }
+            closePopUp(".project-view-box")
             updateProjects();
             updateTask();
         });
 
         for(const i of btn_divs){
             i.addEventListener("click", function (){
-                closePopUp(".project-view-box")
             });
             project_view_btns.appendChild(i);
         }
