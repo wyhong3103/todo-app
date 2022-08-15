@@ -60,6 +60,22 @@ const storage = function(){
         projects[task.project]['task'].push(task);
     }
 
+    function saveTask(task){
+        projects[task.project]['task'][task.id] = task;
+    }
+
+    function removeTask(task){
+        projects[task.project]['task'].splice(task.id, 1);
+    }
+
+    function removeProject(project_name){
+        if (project_name === '') return;
+        else{
+            delete projects[project_name];
+        }
+    }
+
+
     function setCurrentTasks(){
         //TO all currently
         current_tasks = [];
@@ -70,7 +86,7 @@ const storage = function(){
         }
     }
 
-    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks};
+    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject};
 }();
 
 
@@ -93,11 +109,12 @@ const toDoList = function(){
         due_date = new_due_date.join("");
         current_tasks[index].due_date = parse(due_date, 'yyyy-MM-dd HH:mm', new Date());
         current_tasks[index].desc = desc;
+        storage.saveTask(current_tasks[index]);
     }
 
     //delete from local storage
     function deleteTask(index){
-        current_tasks.splice(index, 1);
+        storage.removeTask(current_tasks[index]);
     }
 
     function toggleTask(index){
@@ -205,7 +222,12 @@ const displayController = function(){
         let project_list = storage.getProjects();
         for (let i = 0; i < project_list.length; i++){
             const li = document.createElement("li");
-            li.textContent = `# ${project_list[i]}`;
+            const p = document.createElement("p");
+            const btn = document.createElement("div");
+            btn.classList.add("project-edit-btn");
+            p.textContent = `# ${project_list[i]}`;
+            li.appendChild(p);
+            li.appendChild(btn);
             project_ul.appendChild(li);
         }
     }
@@ -477,6 +499,11 @@ const displayController = function(){
         img_del.src = Del_svg;
         img_del.alt = "del-svg";
         btn_divs[0].appendChild(img_del);
+        btn_divs[0].addEventListener("click",function(){
+            storage.removeProject(project_name);
+            updateProjects();
+            updateTask();
+        });
 
         btn_divs[1].classList.add("project-cancel");
         const img_cancel = new Image();
@@ -492,6 +519,7 @@ const displayController = function(){
         btn_divs[2].addEventListener("click",function(){
             toDoList.saveProject(project_name);
             updateProjects();
+            updateTask();
         });
 
         for(const i of btn_divs){

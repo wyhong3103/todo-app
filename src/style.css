@@ -144,15 +144,38 @@ h3.plus{
     flex-direction: column;
     gap : 1rem;
 }
+
 .projects li{
-    font-family: var(--font1);
-    font-size : 2rem;
-    color : var(--gray_font);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     height : 4rem;
     padding :1rem;
     border-radius: 7px;
     transition: all 0.3s;
+    color : var(--gray_font);
 }
+
+.projects li p{
+    font-family: var(--font1);
+    font-size : 2rem;
+}
+
+
+.project-edit-btn{
+    height :1rem;
+    width :1rem;
+    border-radius : 100%;
+    background-color : var(--gray_font);
+    transition: all 0.3s;
+}
+
+.project-edit-btn:hover{
+    background-color : var(--dark_blue);
+}
+
+
 .projects li:hover, .tab:hover{
     background-color : var(--gray2);
     cursor: pointer;
