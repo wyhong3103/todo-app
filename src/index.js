@@ -2,7 +2,7 @@ import './style.css';
 import {
     format, 
     parse,
-    compareAsc
+    compareAsc,
 } from 'date-fns';
 import Save_svg from './save.svg';
 import Del_svg from './del.svg';
@@ -12,15 +12,24 @@ let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
 let cur_tab = 0;
 
-const task_obj = function(title, due_date, project, desc, checked){
+const task_obj = function(title, due_date, project, desc, checked, id){
     return {
         title,
         due_date,
         project, 
         desc, 
-        checked
+        checked,
+        id
     };
 };
+
+const storage = function(){
+    const projects = JSON.parse(window.localStorage.getItem("projects"));
+    //{project name : desc,[tasks] }
+
+    let has_projects = !(projects === null);
+    return {has_projects};
+}();
 
 
 const toDoList = function(){
@@ -62,6 +71,22 @@ const toDoList = function(){
             }
         });
     }
+
+    /*
+    function sortProject(){
+        projects.sort();
+    }
+
+    function saveProject(project_name){
+        let title = document.querySelector("#project-title-input").value;
+        let desc = document.querySelector("#project-desc-input").value;
+        if (project_name === ""){
+            projects.push(title);
+            //save to local storage
+        }else{
+
+        }
+    }*/
 
     return {saveTask, deleteTask, toggleTask, sortTask};
 }();
@@ -130,13 +155,16 @@ const displayController = function(){
     function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
         taskClear();
-        console.log(current_tasks);
         toDoList.sortTask();
-        console.log(current_tasks);
         for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
         }
     }
+
+    /*
+    function updateProjects(){
+        //From local storage
+    }*/
 
     function initBasicUI(){
         const main_content = document.createElement("div");
@@ -193,6 +221,7 @@ const displayController = function(){
         project_title_plus.textContent = "+";
         project_title.appendChild(project_title_text);
         project_title.appendChild(project_title_plus);
+        project_title.addEventListener("click", projectPopUp);
         
         const ul = document.createElement("ul");
         
@@ -221,9 +250,9 @@ const displayController = function(){
 
     function defaultTask(){
         //Default task
-        const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "#Project 1","Keep working!",0);
-        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "#Project 2","Learn to swim!",0);
-        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "#Personal","Finish the unfinished task.",0);
+        const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "#Project 1","Keep working!",0, 0);
+        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "#Project 2","Learn to swim!",0, 1);
+        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "#Personal","Finish the unfinished task.",0, 2);
         current_tasks = [default1, default2, default3];
         updateTask();
     }
@@ -233,7 +262,7 @@ const displayController = function(){
         _content.removeChild(pop_up);
     }
 
-    function taskPopUp(index = 0){
+    function taskPopUp(index){
         const task_view_box = document.createElement("div");
         task_view_box.classList.add("task-view-box");
 
@@ -342,7 +371,7 @@ const displayController = function(){
         _content.appendChild(task_view_box);
     }
 
-    function projectPopUp(index){
+    function projectPopUp(project_name = ""){
         const project_view_box = document.createElement("div");
         project_view_box.classList.add("project-view-box");
 
@@ -427,7 +456,7 @@ const displayController = function(){
     function init(){
         initBasicUI();
         //no tasks found in storage
-        if (true){
+        if (!storage.has_projects){
             defaultTask();
         }
             //set Today
@@ -435,6 +464,5 @@ const displayController = function(){
 
     //return some function that might be needed for external use
     init();
-    projectPopUp();
 }();
 
