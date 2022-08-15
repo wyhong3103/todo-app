@@ -62,6 +62,7 @@ const storage = function(){
     }
 
     function addTask(task){
+        task.id = projects[task.project]['task'].length;
         projects[task.project]['task'].push(task);
     }
 
@@ -121,7 +122,6 @@ const toDoList = function(){
         let due_date = document.querySelector("#task-due-date-input").value;
         let desc = document.querySelector("#task-desc-input").value;
 
-        current_tasks[index].title = title;
         let new_due_date = [];
         for(let i = 0; i < due_date.length; i++){
             if (due_date[i] === 'T'){
@@ -131,9 +131,14 @@ const toDoList = function(){
             }
         }
         due_date = new_due_date.join("");
-        current_tasks[index].due_date = parse(due_date, 'yyyy-MM-dd HH:mm', new Date());
-        current_tasks[index].desc = desc;
-        storage.saveTask(current_tasks[index]);
+        if (index === current_tasks.length){
+            storage.addTask(task_obj(title, parse(due_date, 'yyyy-MM-dd HH:mm', new Date()), cur_tab, desc, 0, 0));
+        }else{
+            current_tasks[index].title = title;
+            current_tasks[index].due_date = parse(due_date, 'yyyy-MM-dd HH:mm', new Date());
+            current_tasks[index].desc = desc;
+            storage.saveTask(current_tasks[index]);
+        }
     }
 
     function deleteTask(index){
@@ -242,6 +247,9 @@ const displayController = function(){
         for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
         }
+        if (cur_tab != "Today" && cur_tab != "Upcoming"){
+            addNewTaskBtn();
+        }
     }
 
     function addNewTaskBtn(){
@@ -259,6 +267,11 @@ const displayController = function(){
         title_text.textContent = "Add New Task";
         add_new_box.appendChild(add_btn);
         add_new_box.appendChild(title_text);
+        
+        add_new_box.addEventListener("click",function(){
+            taskPopUp(current_tasks.length);
+        });
+
         task_flex_box.appendChild(add_new_box);
     }
 
@@ -273,7 +286,6 @@ const displayController = function(){
                 cur_tab = project_list[i];
                 switchTab();
                 updateTask();
-                addNewTaskBtn();
             });
 
             const p = document.createElement("p");
@@ -442,7 +454,7 @@ const displayController = function(){
         const label_project = document.createElement("label");
         label_project.textContent = "Project";
         const span_project = document.createElement("span");
-        span_project.textContent = (index < current_tasks.length ? current_tasks[index].project : "");
+        span_project.textContent = cur_tab;
         span_project.classList.add("task-project-input");
         input_divs[2].appendChild(label_project);
         input_divs[2].appendChild(span_project);
@@ -478,6 +490,9 @@ const displayController = function(){
         img_del.alt = "del-svg";
         btn_divs[0].appendChild(img_del);
         btn_divs[0].addEventListener("click",function(){
+            if (index === current_tasks.length){
+                return;
+            }
             toDoList.deleteTask(index);
             updateTask();
         });
