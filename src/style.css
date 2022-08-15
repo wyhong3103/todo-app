@@ -212,7 +212,7 @@ TASK STYLE
     transition: all 0.3s;
 }
 
-.task-box:hover{
+.task-box:hover, .add-new-box:hover{
     background-color : var(--gray2);
     cursor: pointer;
     color : var(--dark_blue);
@@ -281,6 +281,31 @@ TASK STYLE
 .task-info h6{
     font-size : 1.5rem;
 }
+
+
+.add-new-box{
+    height : 10rem;
+    font-family: var(--font1);
+    padding : 1rem;
+    border-radius : 10px;
+    color : var(--gray_font);
+    transition: all 0.3s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap : 1rem;
+}
+
+.add-new-box h4{
+    font-size : 3rem;
+}
+
+.add-btn{
+    font-family : sans-serif;
+    font-size: 5rem;
+}
+
 
 
 /*

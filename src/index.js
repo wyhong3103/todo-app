@@ -105,9 +105,7 @@ const storage = function(){
             }
         }else{
             for(let i in projects[cur_tab]['task']){
-                if (isFuture(projects[cur_tab]['task'][i].due_date)){
-                    current_tasks.push(projects[cur_tab]['task'][i]);
-                }
+                current_tasks.push(projects[cur_tab]['task'][i]);
             }
         }
     }
@@ -246,6 +244,24 @@ const displayController = function(){
         }
     }
 
+    function addNewTaskBtn(){
+        const task_flex_box = document.querySelector(".task-flex-box");
+
+        const add_new_box = document.createElement("div");
+        add_new_box.classList.add("add-new-box");
+
+        const add_btn = document.createElement("div");
+        add_btn.textContent = "+";
+        add_btn.classList.add("add-btn");
+        add_new_box.appendChild(add_btn);
+
+        const title_text = document.createElement("h4");
+        title_text.textContent = "Add New Task";
+        add_new_box.appendChild(add_btn);
+        add_new_box.appendChild(title_text);
+        task_flex_box.appendChild(add_new_box);
+    }
+
     function updateProjects(){
         const project_ul = document.querySelector(".projects ul");
         project_ul.innerHTML = "";
@@ -257,6 +273,7 @@ const displayController = function(){
                 cur_tab = project_list[i];
                 switchTab();
                 updateTask();
+                addNewTaskBtn();
             });
 
             const p = document.createElement("p");
