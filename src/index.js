@@ -228,12 +228,12 @@ const displayController = function(){
         updateTask();
     }
 
-    function closePopUp(){
-        const pop_up = document.querySelector(".task-view-box");
+    function closePopUp(selector){
+        const pop_up = document.querySelector(selector);
         _content.removeChild(pop_up);
     }
 
-    function taskPopUp(index){
+    function taskPopUp(index = 0){
         const task_view_box = document.createElement("div");
         task_view_box.classList.add("task-view-box");
 
@@ -331,13 +331,96 @@ const displayController = function(){
         });
 
         for(const i of btn_divs){
-            i.addEventListener("click", closePopUp);
+            i.addEventListener("click", function(){
+                closePopUp(".task-view-box");
+            });
             task_view_btns.appendChild(i);
         }
         task_view.appendChild(task_view_btns);
 
         task_view_box.appendChild(task_view);
         _content.appendChild(task_view_box);
+    }
+
+    function projectPopUp(index){
+        const project_view_box = document.createElement("div");
+        project_view_box.classList.add("project-view-box");
+
+        const project_view = document.createElement("div");
+        project_view.classList.add("project-view");
+
+        let input_divs = [];
+        for(let i = 0; i < 2; i++){
+            const input_div = document.createElement("div");
+            input_div.classList.add("input");
+            input_divs.push(input_div);
+        }
+
+        input_divs[0].classList.add("project-title");
+        const label_title = document.createElement("label");
+        label_title.for = "project-title-input";
+        label_title.textContent = "Project Title*";
+        const input_title = document.createElement("input");
+        input_title.type = "text";
+        input_title.id = "project-title-input"
+        //input_title.value = (index < current_tasks.length ? current_tasks[index].title : "");
+        input_divs[0].appendChild(label_title);
+        input_divs[0].appendChild(input_title);
+        
+
+        input_divs[1].classList.add("project-desc");
+        const label_desc = document.createElement("label");
+        label_desc.for = "project-desc-input";
+        label_desc.textContent = "Description";
+        const textarea = document.createElement("textarea");
+        textarea.id = "project-desc-input";
+        textarea.cols = "30";
+        textarea.rows = "10";
+        //textarea.textContent = (index < current_tasks.length ? current_tasks[index].desc : "");
+        input_divs[1].appendChild(label_desc);
+        input_divs[1].appendChild(textarea);
+
+        for (const i of input_divs){
+            project_view.appendChild(i);
+        }
+
+        const project_view_btns = document.createElement("div");
+        project_view_btns.classList.add("project-view-btns");
+
+        let btn_divs = [];
+        for(let i = 0; i < 3; i++){
+            const btn_div = document.createElement("div");
+            btn_div.classList.add("project-btn");
+            btn_divs.push(btn_div);
+        }
+        btn_divs[0].classList.add("project-del");
+        const img_del = new Image();
+        img_del.src = Del_svg;
+        img_del.alt = "del-svg";
+        btn_divs[0].appendChild(img_del);
+
+        btn_divs[1].classList.add("project-cancel");
+        const img_cancel = new Image();
+        img_cancel.src = Cancel_svg;
+        img_cancel.alt = "cancel-svg";
+        btn_divs[1].appendChild(img_cancel);
+
+        btn_divs[2].classList.add("project-save");
+        const img_save = new Image();
+        img_save.src = Save_svg;
+        img_save.alt = "save-svg";
+        btn_divs[2].appendChild(img_save);
+
+        for(const i of btn_divs){
+            i.addEventListener("click", function (){
+                closePopUp(".project-view-box")
+            });
+            project_view_btns.appendChild(i);
+        }
+        project_view.appendChild(project_view_btns);
+
+        project_view_box.appendChild(project_view);
+        _content.appendChild(project_view_box);
     }
 
 
@@ -352,5 +435,6 @@ const displayController = function(){
 
     //return some function that might be needed for external use
     init();
+    projectPopUp();
 }();
 

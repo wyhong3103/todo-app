@@ -262,11 +262,11 @@ TASK STYLE
 
 /*
 
-    TASk VIEW/CREATE POP UP BOX
+    TASk/PROJECT POP UP BOX
 
 */
 
-.task-view-box{
+.task-view-box, .project-view-box{
     position: absolute;
     top : 0;
     height : 100vh;
@@ -276,10 +276,8 @@ TASK STYLE
     align-items: center;
 }
 
-.task-view{
+.task-view, .project-view{
     background-color: var(--gray3);
-    height : 55rem;
-    width : 55rem;
     display: flex;
     flex-direction: column;
     gap : 1rem;
@@ -293,6 +291,15 @@ TASK STYLE
     0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12)
   ;
+}
+
+.task-view{
+    height : 55rem;
+    width : 55rem;
+}
+.project-view{
+    height : 40rem;
+    width : 40rem;
 }
 
 .input{
@@ -326,7 +333,7 @@ TASK STYLE
     outline: none;
 }
 
-.task-view-btns{
+.task-view-btns, .project-view-btns{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -334,12 +341,12 @@ TASK STYLE
     padding : 1rem;
 }
 
-.task-view-btns img{
+.task-view-btns img, .project-view-btns img{
     height : 3rem;
     width : 3rem;
 }
 
-.task-btn{
+.task-btn, .project-btn{
     height : 5rem;
     width : 8rem;
     display: flex;
@@ -349,7 +356,7 @@ TASK STYLE
     border-radius : 10px;
 }
 
-.task-btn:hover{
+.task-btn:hover, .project-btn:hover{
     cursor: pointer;
     background-color : var(--gray2);
 }
