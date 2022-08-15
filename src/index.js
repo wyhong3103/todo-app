@@ -1,4 +1,4 @@
-import './style.css';
+import './assets/style.css';
 import {
     format, 
     parse,
@@ -7,10 +7,10 @@ import {
     parseISO,
     compareAsc,
 } from 'date-fns';
-import Save_svg from './save.svg';
-import Del_svg from './del.svg';
-import Cancel_svg from './cancel.svg';
-import Github_svg from './github.svg';
+import Save_svg from './assets/save.svg';
+import Del_svg from './assets/del.svg';
+import Cancel_svg from './assets/cancel.svg';
+import Github_svg from './assets/github.svg';
 
 let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
