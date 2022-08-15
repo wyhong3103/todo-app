@@ -88,6 +88,10 @@ const storage = function(){
 
     function removeTask(task){
         projects[task.project]['task'].splice(task.id, 1);
+        for(let i in projects[task.project]['task']){
+            //Reassign ID
+            projects[task.project]['task'][i].id = i;
+        }
         saveLocalStorage();
     }
 
@@ -104,7 +108,6 @@ const storage = function(){
 
 
     function setCurrentTasks(){
-        //TO all currently
         current_tasks = [];
         if (cur_tab === "Today"){
             for (let i in projects){
@@ -164,13 +167,14 @@ const toDoList = function(){
     }
 
     function toggleTask(index){
-        current_tasks[index].checked = !current_tasks[index].checked;
+        current_tasks[index].checked = (current_tasks[index].checked === 1 ? 0 : 1);
+        storage.saveTask(current_tasks[index]);
     }
 
     function sortTask(){
         current_tasks.sort(function (a,b){
             if (a.checked !== b.checked){
-                return (a.checked > b.checked ? -1 : 1);
+                return (a.checked == 1 && b.checked == 0 ? -1 : 1);
             }else{
                 return (compareAsc(a.due_date, b.due_date) >= 0 ? 1 : -1);
             }
@@ -217,6 +221,14 @@ const displayController = function(){
         task_title.classList.add("task-title");
         task_title.textContent = task.title;
 
+        const span_late = document.createElement("span");
+        if (!isFuture(current_tasks[index].due_date) && !current_tasks[index].checked){
+            span_late.classList.add("late");
+            span_late.textContent = "!";
+        }
+        task_title.appendChild(span_late);
+
+
         task_click_region.appendChild(task_title);
         
         const task_info = document.createElement("div");
@@ -230,7 +242,7 @@ const displayController = function(){
 
         task_info.append(due_date);
         task_info.append(task_project);
-        if (task.checked === true){
+        if (task.checked === 1){
             check.classList.add("checked");
             task_title.classList.add("done");
         }
