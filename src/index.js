@@ -7,7 +7,6 @@ import Save_svg from './save.svg';
 import Del_svg from './del.svg';
 import Cancel_svg from './cancel.svg';
 
-
 let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
 let cur_tab = 0;
@@ -26,7 +25,8 @@ const task_obj = function(title, due_date, project, desc, checked){
 const displayController = function(){
     const _content = document.querySelector("#content");
 
-    function createTask(task){
+    function createTask(index){
+        const task = current_tasks[index];
         const task_box = document.createElement("div");
         task_box.classList.add("task-box");
 
@@ -50,7 +50,7 @@ const displayController = function(){
         task_info.classList.add("task-info");
         const due_date = document.createElement("h6");
         due_date.classList.add("due-date");
-        due_date.textContent = task.due_date;
+        due_date.textContent = format(task.due_date, "h:mm a MM/dd/yyyy");
         const task_project = document.createElement("h6");
         task_project.classList.add("task-project");
         task_project.textContent = task.project;
@@ -63,19 +63,25 @@ const displayController = function(){
         }
 
         task_click_region.appendChild(task_info);
+        
+        //Add Event Listener
+        task_click_region.addEventListener("click", function(){
+            taskPopUp(index);
+            //update information
+        });
+
         task_box.appendChild(task_click_region);
         return task_box;
     }
 
     function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
-        for(const i of current_tasks){
+        for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
         }
     }
 
     function initBasicUI(){
-
         const main_content = document.createElement("div");
         main_content.classList.add("main-content");
         _content.appendChild(main_content);
@@ -158,20 +164,14 @@ const displayController = function(){
 
     function defaultTask(){
         //Default task
-        const default1 = task_obj("Work", format(new Date(2022, 7, 15, 20,10), "h:mm a MM/dd/yyyy") , "#Project 1","Keep working!",0);
-        const default2 = task_obj("Swim",format(new Date(2022, 9, 15, 10,15), "h:mm a MM/dd/yyyy") , "#Project 2","Learn to swim!",0);
-        const default3 = task_obj("Code",format(new Date(2022, 8, 15, 10,20), "h:mm a MM/dd/yyyy") , "#Personal","Finish the unfinished task.",0);
+        const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "#Project 1","Keep working!",0);
+        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "#Project 2","Learn to swim!",0);
+        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "#Personal","Finish the unfinished task.",0);
         current_tasks = [default1, default2, default3];
         updateTask();
     }
 
-    function hideBg(){
-        const hide_bg = document.createElement("div");
-        hide_bg.classList.add("hide-bg");
-        _content.appendChild(hide_bg);
-    }
-
-    function taskPopUp(){
+    function taskPopUp(index){
         const task_view_box = document.createElement("div");
         task_view_box.classList.add("task-view-box");
 
@@ -192,6 +192,7 @@ const displayController = function(){
         const input_title = document.createElement("input");
         input_title.type = "text";
         input_title.id = "task-title-input"
+        input_title.value = (index < current_tasks.length ? current_tasks[index].title : "");
         input_divs[0].appendChild(label_title);
         input_divs[0].appendChild(input_title);
         
@@ -203,6 +204,7 @@ const displayController = function(){
         const input_due_date = document.createElement("input");
         input_due_date.type = "datetime-local";
         input_due_date.id = "task-due-date-input"
+        input_due_date.value = (index < current_tasks.length ? format(current_tasks[index].due_date, "yyyy-MM-dd HH:mm") : "");
         input_divs[1].appendChild(label_due_date);
         input_divs[1].appendChild(input_due_date);
 
@@ -210,7 +212,7 @@ const displayController = function(){
         const label_project = document.createElement("label");
         label_project.textContent = "Project";
         const span_project = document.createElement("span");
-        span_project.textContent = "#Personal";
+        span_project.textContent = (index < current_tasks.length ? current_tasks[index].project : "");
         span_project.classList.add("task-project-input");
         input_divs[2].appendChild(label_project);
         input_divs[2].appendChild(span_project);
@@ -223,6 +225,7 @@ const displayController = function(){
         textarea.id = "task-desc-input";
         textarea.cols = "30";
         textarea.rows = "10";
+        textarea.textContent = (index < current_tasks.length ? current_tasks[index].desc : "");
         input_divs[3].appendChild(label_desc);
         input_divs[3].appendChild(textarea);
 
@@ -277,8 +280,5 @@ const displayController = function(){
 
     //return some function that might be needed for external use
     init();
-    hideBg();
-    taskPopUp();
-    return {taskPopUp, hideBg}
 }();
 

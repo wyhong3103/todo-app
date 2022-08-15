@@ -18,7 +18,8 @@ html{
     --font1 : 'Raleway', sans-serif ;
     --gray : #f2f5f7;
     --gray1 : #d6dadf;
-    --gray2 :#e6e9eb;
+    --gray2 :#e6e9ebea;
+    --gray3 : #f2f5f7;
     --gray_font : #969da7;
     --dark_blue : #2b323b;
 }
@@ -30,14 +31,6 @@ html{
     padding : 3rem 20rem 3rem 20rem;
     background-color : var(--gray);
     overflow: auto;
-}
-.hide-bg{
-    position: absolute;
-    top : 0;
-    height : 100vh;
-    width : 100vw;
-    background-color: black;
-    opacity : 0.5;
 }
 
 .header{
@@ -284,7 +277,7 @@ TASK STYLE
 }
 
 .task-view{
-    background-color: var(--gray);
+    background-color: var(--gray3);
     height : 55rem;
     width : 55rem;
     display: flex;
@@ -292,6 +285,14 @@ TASK STYLE
     gap : 1rem;
     padding : 2rem;
     border-radius : 10px;
+    box-shadow:
+    0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+    0 12.5px 10px rgba(0, 0, 0, 0.06),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+    0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+    0 100px 80px rgba(0, 0, 0, 0.12)
+  ;
 }
 
 .input{
