@@ -28,6 +28,7 @@ html{
     width: 100vw;
     padding : 3rem 20rem 3rem 20rem;
     background-color : var(--gray);
+    overflow: auto;
 }
 
 .header{
@@ -174,10 +175,10 @@ TASK STYLE
     font-size : 4rem;
 }
 
-.task{
+.task-box{
     height : 10rem;
     display: grid;
-    grid-template-columns: repeat(10,1fr);
+    grid-template-columns: repeat(20,1fr);
     grid-template-rows: repeat(3,1fr);
     font-family: var(--font1);
     padding : 1rem;
@@ -186,14 +187,14 @@ TASK STYLE
     transition: all 0.3s;
 }
 
-.task:hover{
+.task-box:hover{
     background-color : var(--gray2);
     cursor: pointer;
     color : var(--dark_blue);
 }
 
 .check-box{
-    grid-column: 1;
+    grid-column: 1/span 2;
     grid-row : 1/-1;
     display: flex;
     justify-content: center;
@@ -219,9 +220,17 @@ TASK STYLE
     background-color: black;
 }
 
+.task-click{
+    grid-column: 3/-1;
+    grid-row : 1/-1;
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
 
 .task-title{
-    grid-column: 2 / span 7;
+    grid-column: 2 / span 14;
     grid-row: 1 / span 2;
     font-size : 2.5rem;
     display: flex;
@@ -234,7 +243,7 @@ TASK STYLE
 
 
 .task-info{
-    grid-column: 2 / span 7;
+    grid-column: 2 / span 14;
     grid-row: 3;
     display: flex;
     flex-direction: row;

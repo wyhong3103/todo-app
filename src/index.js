@@ -5,22 +5,25 @@ const task_obj = function(title, due_date, project, desc, checked){
 };
 
 const displayController = function(){
-    
-    function taskCreator(task){
-        const task_div = document.createElement("div");
-        task_div.classList.add("task");
+    function createTask(task){
+        const task_box = document.createElement("div");
+        task_box.classList.add("task-box");
+
         const check_box = document.createElement("div");
         check_box.classList.add("check-box");
         const check = document.createElement("div");
         check.classList.add("check");
         check_box.appendChild(check);
+        task_box.appendChild(check_box);
 
-        task_div.appendChild(check_box);
+        const task_click_region = document.createElement("div");
+        task_click_region.classList.add("task-click");
+        
         const task_title = document.createElement('h4');
         task_title.classList.add("task-title");
         task_title.textContent = task.title;
 
-        task_div.appendChild(task_title);
+        task_click_region.appendChild(task_title);
         
         const task_info = document.createElement("div");
         task_info.classList.add("task-info");
@@ -38,8 +41,16 @@ const displayController = function(){
             task_title.classList.add("done");
         }
 
-        task_div.appendChild(task_info);
-        return task_div;
+        task_click_region.appendChild(task_info);
+        task_box.appendChild(task_click_region);
+        return task_box;
+    }
+
+    function updateTask(tasks){
+        const task_flex_box = document.querySelector(".task-flex-box");
+        for(const i of tasks){
+            task_flex_box.appendChild(createTask(i));
+        }
     }
 
     function init(){
@@ -117,17 +128,15 @@ const displayController = function(){
         const task_flex_box = document.createElement("div");
         task_flex_box.classList.add("task-flex-box");
         
+        tasks.appendChild(task_flex_box);
+        grid_box.appendChild(tasks);
+
         //Default task
         const default1 = task_obj("Work", "10AM 11 Jun 2021", "#Project 1","None",0);
         const default2 = task_obj("Work1", "10AM 11 Jun 2021", "#Project 1","None",1);
         const default3 = task_obj("Work2", "10AM 11 Jun 2021", "#Project 1","None",1);
         let default_task = [default1, default2, default3] ;
-        for(let i of default_task) {
-            task_flex_box.appendChild(taskCreator(i));
-        }
-
-        tasks.appendChild(task_flex_box);
-        grid_box.appendChild(tasks);
+        updateTask(default_task);
     }
 
     init();
