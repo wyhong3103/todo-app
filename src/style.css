@@ -373,6 +373,10 @@ TASK STYLE
     border: none;
 }
 
+input.required{
+    border: 3px solid rgb(255, 175, 175);
+}
+
 .input textarea{
     font-size : 1.5rem;
     font-family: var(--font1);

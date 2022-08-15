@@ -425,6 +425,13 @@ const displayController = function(){
         grid_box.appendChild(tasks);
     }
 
+    function taskInputValidate(){
+        let title = document.querySelector("#task-title-input").value;
+        let due_date = document.querySelector("#task-due-date-input").value;
+        if (title === '' || due_date === '') return false;
+        return true;
+    }
+
     function getDefaultTask(){
         //Default task
         storage.createProject("Personal", "My personal todo list!");
@@ -524,6 +531,7 @@ const displayController = function(){
                 return;
             }
             toDoList.deleteTask(index);
+            closePopUp(".task-view-box");
             updateTask();
         });
 
@@ -532,6 +540,9 @@ const displayController = function(){
         img_cancel.src = Cancel_svg;
         img_cancel.alt = "cancel-svg";
         btn_divs[1].appendChild(img_cancel);
+        btn_divs[1].addEventListener("click", function(){
+            closePopUp(".task-view-box");
+        });
 
         btn_divs[2].classList.add("task-save");
         const img_save = new Image();
@@ -539,14 +550,19 @@ const displayController = function(){
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
         btn_divs[2].addEventListener("click",function(){
+            if (!taskInputValidate()){
+                let title = document.querySelector("#task-title-input")
+                let due_date = document.querySelector("#task-due-date-input");
+                title.classList.add("required");
+                due_date.classList.add("required");
+                return;
+            }
             toDoList.saveTask(index);
+            closePopUp(".task-view-box");
             updateTask();
         });
 
         for(const i of btn_divs){
-            i.addEventListener("click", function(){
-                closePopUp(".task-view-box");
-            });
             task_view_btns.appendChild(i);
         }
         task_view.appendChild(task_view_btns);
