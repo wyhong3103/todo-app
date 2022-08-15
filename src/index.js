@@ -2,6 +2,8 @@ import './style.css';
 import {
     format, 
     parse,
+    isToday,
+    isFuture,
     compareAsc,
 } from 'date-fns';
 import Save_svg from './save.svg';
@@ -10,7 +12,7 @@ import Cancel_svg from './cancel.svg';
 
 let current_tasks = [];
 //0 = today, 1 = upcoming, others = project #
-let cur_tab = 0;
+let cur_tab = "Today";
 
 const task_obj = function(title, due_date, project, desc, checked, id){
     return {
@@ -45,6 +47,9 @@ const storage = function(){
             desc : desc,
             task : temp['task']
         };
+        for(let i in projects[project_name]['task']){
+            projects[project_name]['task'][i].project = project_name;
+        }
         delete projects[prev_name];
     }
 
@@ -74,19 +79,40 @@ const storage = function(){
             delete projects[project_name];
         }
     }
+    function getProject(project_name){
+        return projects[project_name];
+    }
 
 
     function setCurrentTasks(){
         //TO all currently
         current_tasks = [];
-        for (let i in projects){
-            for(let j in projects[i]['task']){
-                current_tasks.push(projects[i]['task'][j]);
+        if (cur_tab === "Today"){
+            for (let i in projects){
+                for(let j in projects[i]['task']){
+                    if (isToday(projects[i]['task'][j].due_date)){
+                        current_tasks.push(projects[i]['task'][j]);
+                    }
+                }
+            }
+        }else if (cur_tab === "Upcoming"){
+            for (let i in projects){
+                for(let j in projects[i]['task']){
+                    if (isFuture(projects[i]['task'][j].due_date)){
+                        current_tasks.push(projects[i]['task'][j]);
+                    }
+                }
+            }
+        }else{
+            for(let i in projects[cur_tab]['task']){
+                if (isFuture(projects[cur_tab]['task'][i].due_date)){
+                    current_tasks.push(projects[cur_tab]['task'][i]);
+                }
             }
         }
     }
 
-    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject};
+    return {has_projects, createProject, modifyProject, getProjects, addTask, setCurrentTasks, saveTask, removeTask, removeProject, getProject};
 }();
 
 
@@ -112,7 +138,6 @@ const toDoList = function(){
         storage.saveTask(current_tasks[index]);
     }
 
-    //delete from local storage
     function deleteTask(index){
         storage.removeTask(current_tasks[index]);
     }
@@ -201,6 +226,11 @@ const displayController = function(){
         return task_box;
     }
 
+    function switchTab(){
+        const tab_title = document.querySelector('.tab-title');
+        tab_title.textContent = cur_tab;
+    }
+
     function taskClear(){
         const task_flex_box = document.querySelector(".task-flex-box");
         task_flex_box.innerHTML = "";
@@ -222,8 +252,18 @@ const displayController = function(){
         let project_list = storage.getProjects();
         for (let i = 0; i < project_list.length; i++){
             const li = document.createElement("li");
+
+            li.addEventListener("click", function(){
+                cur_tab = project_list[i];
+                switchTab();
+                updateTask();
+            });
+
             const p = document.createElement("p");
             const btn = document.createElement("div");
+            btn.addEventListener("click", function(){
+                projectPopUp(project_list[i]);
+            });
             btn.classList.add("project-edit-btn");
             p.textContent = `# ${project_list[i]}`;
             li.appendChild(p);
@@ -257,8 +297,18 @@ const displayController = function(){
 
         const today_tab = document.createElement("div");
         today_tab.classList.add("today");
+        today_tab.addEventListener("click", function(){
+            cur_tab = "Today";
+            switchTab();
+            updateTask();
+        });
         const upcoming_tab = document.createElement("div");
         upcoming_tab.classList.add("upcoming");
+        upcoming_tab.addEventListener("click", function(){
+            cur_tab = "Upcoming";
+            switchTab();
+            updateTask();
+        });
         today_tab.classList.add("tab");
         upcoming_tab.classList.add("tab");
 
@@ -323,9 +373,9 @@ const displayController = function(){
         storage.createProject("Project 2", "Hoola! This is project 2!");
         const default1 = task_obj("Work", new Date(2022, 7, 15, 20,10) , "Project 1","Keep working!",0, 0);
         storage.addTask(default1);
-        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "Project 2","Learn to swim!",0, 1);
+        const default2 = task_obj("Swim",new Date(2022, 9, 15, 10,15) , "Project 2","Learn to swim!",0, 0);
         storage.addTask(default2);
-        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "Personal","Finish the unfinished task.",0, 2);
+        const default3 = task_obj("Code",new Date(2022, 8, 15, 10,20) , "Personal","Finish the unfinished task.",0, 0);
         storage.addTask(default3);
     }
 
@@ -444,6 +494,10 @@ const displayController = function(){
     }
 
     function projectPopUp(project_name){
+        let project = {};
+        if (project_name != ""){
+            project = storage.getProject(project_name);
+        }
         const project_view_box = document.createElement("div");
         project_view_box.classList.add("project-view-box");
 
@@ -464,7 +518,7 @@ const displayController = function(){
         const input_title = document.createElement("input");
         input_title.type = "text";
         input_title.id = "project-title-input"
-        //input_title.value = (index < current_tasks.length ? current_tasks[index].title : "");
+        input_title.value = project_name;
         input_divs[0].appendChild(label_title);
         input_divs[0].appendChild(input_title);
         
@@ -477,7 +531,7 @@ const displayController = function(){
         textarea.id = "project-desc-input";
         textarea.cols = "30";
         textarea.rows = "10";
-        //textarea.textContent = (index < current_tasks.length ? current_tasks[index].desc : "");
+        textarea.textContent = (project_name != '' ? project.desc : "");
         input_divs[1].appendChild(label_desc);
         input_divs[1].appendChild(textarea);
 
@@ -501,6 +555,10 @@ const displayController = function(){
         btn_divs[0].appendChild(img_del);
         btn_divs[0].addEventListener("click",function(){
             storage.removeProject(project_name);
+            if (cur_tab === project_name){
+                cur_tab = "Today";
+                switchTab();
+            }
             updateProjects();
             updateTask();
         });
@@ -518,6 +576,10 @@ const displayController = function(){
         btn_divs[2].appendChild(img_save);
         btn_divs[2].addEventListener("click",function(){
             toDoList.saveProject(project_name);
+            if (cur_tab === project_name){
+                cur_tab = document.querySelector("#project-title-input").value;
+                switchTab();
+            }
             updateProjects();
             updateTask();
         });
