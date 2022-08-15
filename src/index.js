@@ -4,6 +4,7 @@ import {
     parse,
     isToday,
     isFuture,
+    parseISO,
     compareAsc,
 } from 'date-fns';
 import Save_svg from './save.svg';
@@ -27,11 +28,22 @@ const task_obj = function(title, due_date, project, desc, checked, id){
 
 const storage = function(){
     let projects = JSON.parse(window.localStorage.getItem("projects"));
-    //{project name : desc,[tasks] }
+
+
+    function saveLocalStorage(){
+        window.localStorage.setItem("projects", JSON.stringify(projects));
+    }
 
     let has_projects = !(projects === null);
     if (!has_projects){
         projects = {};
+        saveLocalStorage();
+    }else{
+        for(let i in projects){
+            for(let j in projects[i]['task']){
+                projects[i]['task'][j].due_date = parseISO(projects[i]['task'][j].due_date);
+            }
+        }
     }
     
     function createProject(project_name, desc){
@@ -39,6 +51,7 @@ const storage = function(){
             desc : desc,
             task : []
         }
+        saveLocalStorage();
     }
 
     function modifyProject(prev_name, project_name, desc){
@@ -51,6 +64,7 @@ const storage = function(){
             projects[project_name]['task'][i].project = project_name;
         }
         delete projects[prev_name];
+        saveLocalStorage();
     }
 
     function getProjects(){
@@ -64,14 +78,17 @@ const storage = function(){
     function addTask(task){
         task.id = projects[task.project]['task'].length;
         projects[task.project]['task'].push(task);
+        saveLocalStorage();
     }
 
     function saveTask(task){
         projects[task.project]['task'][task.id] = task;
+        saveLocalStorage();
     }
 
     function removeTask(task){
         projects[task.project]['task'].splice(task.id, 1);
+        saveLocalStorage();
     }
 
     function removeProject(project_name){
@@ -79,6 +96,7 @@ const storage = function(){
         else{
             delete projects[project_name];
         }
+        saveLocalStorage();
     }
     function getProject(project_name){
         return projects[project_name];
@@ -636,8 +654,10 @@ const displayController = function(){
             getDefaultTask();
             updateTask();
             updateProjects();
+        }else{
+            updateTask();
+            updateProjects();
         }
-            //set Today
     }
 
     //return some function that might be needed for external use
