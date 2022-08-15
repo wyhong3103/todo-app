@@ -53,7 +53,17 @@ const toDoList = function(){
         current_tasks[index].checked = !current_tasks[index].checked;
     }
 
-    return {saveTask, deleteTask, toggleTask};
+    function sortTask(){
+        current_tasks.sort(function (a,b){
+            if (a.checked !== b.checked){
+                return (a.checked > b.checked ? -1 : 1);
+            }else{
+                return (compareAsc(a.due_date, b.due_date) >= 0 ? 1 : -1);
+            }
+        });
+    }
+
+    return {saveTask, deleteTask, toggleTask, sortTask};
 }();
 
 const displayController = function(){
@@ -120,6 +130,9 @@ const displayController = function(){
     function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
         taskClear();
+        console.log(current_tasks);
+        toDoList.sortTask();
+        console.log(current_tasks);
         for(let i = 0; i < current_tasks.length; i++){
             task_flex_box.appendChild(createTask(i));
         }
