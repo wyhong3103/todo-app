@@ -49,7 +49,11 @@ const toDoList = function(){
         current_tasks.splice(index, 1);
     }
 
-    return {saveTask, deleteTask};
+    function toggleTask(index){
+        current_tasks[index].checked = !current_tasks[index].checked;
+    }
+
+    return {saveTask, deleteTask, toggleTask};
 }();
 
 const displayController = function(){
@@ -64,6 +68,10 @@ const displayController = function(){
         check_box.classList.add("check-box");
         const check = document.createElement("div");
         check.classList.add("check");
+        check.addEventListener("click",function(){
+            toDoList.toggleTask(index);
+            updateTask();
+        });
         check_box.appendChild(check);
         task_box.appendChild(check_box);
 
@@ -87,7 +95,7 @@ const displayController = function(){
 
         task_info.append(due_date);
         task_info.append(task_project);
-        if (task.checked === 1){
+        if (task.checked === true){
             check.classList.add("checked");
             task_title.classList.add("done");
         }

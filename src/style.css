@@ -311,7 +311,7 @@ TASK STYLE
     font-family: var(--font1);
     padding : 1rem;
     border-radius : 10px;
-    border : 1px solid black;
+    border: none;
 }
 
 .input textarea{
@@ -319,6 +319,11 @@ TASK STYLE
     font-family: var(--font1);
     border-radius : 10px;
     padding : 1rem;
+    border: none;
+}
+
+.input input:focus, .input textarea:focus{
+    outline: none;
 }
 
 .task-view-btns{
