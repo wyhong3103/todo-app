@@ -1,8 +1,23 @@
 import './style.css';
+import {
+    format, 
+    compareAsc
+} from 'date-fns';
+
+let current_tasks = [];
+//0 = today, 1 = upcoming, others = project #
+let cur_tab = 0;
 
 const task_obj = function(title, due_date, project, desc, checked){
-    return {title, due_date, project, desc, checked};
+    return {
+        title,
+        due_date,
+        project, 
+        desc, 
+        checked
+    };
 };
+
 
 const displayController = function(){
     function createTask(task){
@@ -46,14 +61,14 @@ const displayController = function(){
         return task_box;
     }
 
-    function updateTask(tasks){
+    function updateTask(){
         const task_flex_box = document.querySelector(".task-flex-box");
-        for(const i of tasks){
+        for(const i of current_tasks){
             task_flex_box.appendChild(createTask(i));
         }
     }
 
-    function init(){
+    function initBasicUI(){
         const content = document.querySelector("#content");
 
         const header = document.createElement("div");
@@ -130,16 +145,27 @@ const displayController = function(){
         
         tasks.appendChild(task_flex_box);
         grid_box.appendChild(tasks);
-
-        //Default task
-        const default1 = task_obj("Work", "10AM 11 Jun 2021", "#Project 1","None",0);
-        const default2 = task_obj("Work1", "10AM 11 Jun 2021", "#Project 1","None",1);
-        const default3 = task_obj("Work2", "10AM 11 Jun 2021", "#Project 1","None",1);
-        let default_task = [default1, default2, default3] ;
-        updateTask(default_task);
     }
 
-    init();
+    function defaultTask(){
+        //Default task
+        const default1 = task_obj("Work", format(new Date(2022, 7, 15, 20,10), "h:mm a MM/dd/yyyy") , "#Project 1","Keep working!",0);
+        const default2 = task_obj("Swim",format(new Date(2022, 9, 15, 10,15), "h:mm a MM/dd/yyyy") , "#Project 2","Learn to swim!",0);
+        const default3 = task_obj("Code",format(new Date(2022, 8, 15, 10,20), "h:mm a MM/dd/yyyy") , "·Today","Finish the unfinished task.",0);
+        current_tasks = [default1, default2, default3];
+        updateTask();
+    }
+
+    function init(){
+        initBasicUI();
+        //no tasks found in storage
+        if (true){
+            defaultTask();
+        }
+            //set Today
+    }
+
     //return some function that might be needed for external use
+    init();
 }();
 
