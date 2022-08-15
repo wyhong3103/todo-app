@@ -71,6 +71,10 @@ const displayController = function(){
     function initBasicUI(){
         const content = document.querySelector("#content");
 
+        const main_content = document.createElement("div");
+        main_content.classList.add("main-content");
+        content.appendChild(main_content);
+
         const header = document.createElement("div");
         header.classList.add("header");
         const page_title = document.createElement("h1");
@@ -78,12 +82,12 @@ const displayController = function(){
         page_title.textContent = "myTodo";
         
         header.appendChild(page_title);
-        content.appendChild(header);
+        main_content.appendChild(header);
 
         const grid_box = document.createElement("div");
         grid_box.classList.add("grid-box");
 
-        content.appendChild(grid_box);
+        main_content.appendChild(grid_box);
 
         //Initialize tabs UI
         const tabs = document.createElement("div");

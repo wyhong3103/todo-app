@@ -23,13 +23,14 @@ html{
     --dark_blue : #2b323b;
 }
 
-#content{
+.main-content{
     height: 100vh;
     width: 100vw;
     padding : 3rem 20rem 3rem 20rem;
     background-color : var(--gray);
     overflow: auto;
 }
+
 
 .header{
     height : 8rem;
