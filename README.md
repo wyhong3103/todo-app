@@ -8,4 +8,4 @@ A very simple to-do app.
 
 # Live Demo
 
-[Here](https://wyhong3103.github.io/todo_app/)
+[Here](https://wyhong3103.github.io/todo-app/)
