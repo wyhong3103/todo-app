@@ -521,6 +521,7 @@ const displayController = function(){
         label_title.for = "task-title-input";
         label_title.textContent = "Title*";
         const input_title = document.createElement("input");
+        input_title.maxLength = '100';
         input_title.type = "text";
         input_title.id = "task-title-input"
         input_title.value = (index < current_tasks.length ? current_tasks[index].title : "");
@@ -556,6 +557,7 @@ const displayController = function(){
         textarea.id = "task-desc-input";
         textarea.cols = "30";
         textarea.rows = "10";
+        textarea.maxLength = '2000';
         textarea.textContent = (index < current_tasks.length ? current_tasks[index].desc : "");
         input_divs[3].appendChild(label_desc);
         input_divs[3].appendChild(textarea);
@@ -649,6 +651,7 @@ const displayController = function(){
         input_title.type = "text";
         input_title.id = "project-title-input"
         input_title.value = project_name;
+        input_title.maxLength = "100";
         input_divs[0].appendChild(label_title);
         input_divs[0].appendChild(input_title);
         
@@ -661,6 +664,7 @@ const displayController = function(){
         textarea.id = "project-desc-input";
         textarea.cols = "30";
         textarea.rows = "10";
+        textarea.maxLength = "2000";
         textarea.textContent = (project_name != '' ? project.desc : "");
         input_divs[1].appendChild(label_desc);
         input_divs[1].appendChild(textarea);
