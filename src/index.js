@@ -553,7 +553,7 @@ const displayController = function(){
         const label_project = document.createElement("label");
         label_project.textContent = "Project";
         const span_project = document.createElement("span");
-        span_project.textContent = cur_tab;
+        span_project.textContent = (index === current_tasks.length ? cur_tab : current_tasks[index].project);
         span_project.classList.add("task-project-input");
         input_divs[2].appendChild(label_project);
         input_divs[2].appendChild(span_project);
