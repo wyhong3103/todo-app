@@ -502,6 +502,15 @@ const displayController = function(){
         _content.removeChild(pop_up);
     }
 
+    function trimInput(){
+        const input = document.querySelectorAll("input");
+        for(let i of input){
+            i.value = i.value.trim();
+        }
+        const textarea = document.querySelector("textarea");
+        textarea.textContent = textarea.textContent.trim();
+    }
+
     function taskPopUp(index){
         const task_view_box = document.createElement("div");
         task_view_box.classList.add("task-view-box");
@@ -604,6 +613,7 @@ const displayController = function(){
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
         btn_divs[2].addEventListener("click",function(){
+            trimInput();
             if (!taskInputValidate()){
                 let title = document.querySelector("#task-title-input")
                 let due_date = document.querySelector("#task-due-date-input");
@@ -624,6 +634,7 @@ const displayController = function(){
         task_view_box.appendChild(task_view);
         _content.appendChild(task_view_box);
     }
+
 
     function projectPopUp(project_name){
         let project = {};
@@ -713,6 +724,7 @@ const displayController = function(){
         img_save.alt = "save-svg";
         btn_divs[2].appendChild(img_save);
         btn_divs[2].addEventListener("click",function(){
+            trimInput();
             if (!projectInputValidate(project_name)){
                 const input = document.querySelector("#project-title-input");
                 input.value = "";
