@@ -239,9 +239,12 @@ const displayController = function(){
         const task_click_region = document.createElement("div");
         task_click_region.classList.add("task-click");
         
+        const task_title_box = document.createElement("div");
         const task_title = document.createElement('h4');
         task_title.classList.add("task-title");
         task_title.textContent = task.title;
+        task_title_box.classList.add("task-title-box");
+        task_title_box.appendChild(task_title);
 
         const span_late = document.createElement("span");
         if (!isFuture(current_tasks[index].due_date) && !current_tasks[index].checked){
@@ -251,7 +254,7 @@ const displayController = function(){
         task_title.appendChild(span_late);
 
 
-        task_click_region.appendChild(task_title);
+        task_click_region.appendChild(task_title_box);
         
         const task_info = document.createElement("div");
         task_info.classList.add("task-info");

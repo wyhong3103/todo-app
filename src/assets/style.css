@@ -160,6 +160,10 @@ h3.plus{
 .projects li p{
     font-family: var(--font1);
     font-size : 2rem;
+    width : 25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -198,6 +202,10 @@ TASK STYLE
 .tab-title{
     font-family: var(--font1);
     font-size : 4rem;
+    width : 55rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .task-box{
@@ -254,12 +262,18 @@ TASK STYLE
 }
 
 
-.task-title{
+.task-title-box{
     grid-column: 2 / span 14;
     grid-row: 1 / span 2;
-    font-size : 2.5rem;
     display: flex;
     align-items: center;
+}
+
+.task-title{
+    font-size : 2.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .late{
@@ -284,6 +298,9 @@ TASK STYLE
 
 .task-info h6{
     font-size : 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
